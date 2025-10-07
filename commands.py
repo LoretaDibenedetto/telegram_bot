@@ -12,6 +12,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.chat_data["memory"] = []
     await update.message.reply_text("Ciao! 👋 Sono il tuo bot AI. Scrivimi qualcosa e ti risponderò!")
 
+
+
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     user_message = update.message.text
@@ -37,11 +39,34 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Invia la risposta all'utente
     await update.message.reply_text(reply)
 
+  
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     help_text = (
         "Comandi disponibili:\n"
         "/start - Avvia il bot\n"
         "/help - Mostra questo messaggio di aiuto\n"
+        "/history - Mostra gli ultimi messaggi della chat\n\n"
         "Scrivi qualsiasi messaggio per chattare con l'AI."
     )
     await update.message.reply_text(help_text)
+
+async def history_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        chat_id = update.message.chat_id
+
+        # Recupera ultimo storico (ad esempio ultimi 10 messaggi)
+        messages = get_recent_messages(chat_id, limit=10)
+        
+        if not messages:
+            await update.message.reply_text("📭 Nessuna cronologia disponibile per questa chat.")
+            return
+
+        # Prepara testo da inviare
+        history_lines = []
+        for sender, message in messages:
+            prefix = "🤖 AI" if sender == "bot" else "👤 Utente"
+            history_lines.append(f"{prefix}: {message}")
+
+        history_text = "\n".join(history_lines)
+
+        await update.message.reply_text(f"📜 Storico ultimi messaggi:\n\n{history_text}")
+ 
