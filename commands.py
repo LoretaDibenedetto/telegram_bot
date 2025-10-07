@@ -22,3 +22,12 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.chat_data["memory"] = memory
 
     await update.message.reply_text(reply)
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    help_text = (
+        "Comandi disponibili:\n"
+        "/start - Avvia il bot\n"
+        "/help - Mostra questo messaggio di aiuto\n"
+        "Scrivi qualsiasi messaggio per chattare con l'AI."
+    )
+    await update.message.reply_text(help_text)
