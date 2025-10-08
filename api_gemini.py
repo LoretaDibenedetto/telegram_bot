@@ -13,7 +13,7 @@ def ask_gemini(context_text: str) -> str:
     }
 
     try:
-        response = requests.post(config.GEMINI_API_URL, json=payload, timeout=20)
+        response = requests.post(config.GEMINI_API_URL, json=payload, timeout=40)
         response.raise_for_status()
         data = response.json()
     except requests.RequestException as e:

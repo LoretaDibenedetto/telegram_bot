@@ -35,9 +35,11 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Aggiorna la memoria con la risposta della AI
     memory = add_message(memory, f"AI: {reply}")
     context.chat_data["memory"] = memory
+    await send_long_message(update, reply)
 
-    # Invia la risposta all'utente
-    await update.message.reply_text(reply)
+
+    
+    
 
   
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -49,6 +51,17 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Scrivi qualsiasi messaggio per chattare con l'AI."
     )
     await update.message.reply_text(help_text)
+
+
+MAX_TELEGRAM_MSG_LENGTH = 4096
+
+async def send_long_message(update, text):
+    if len(text) <= MAX_TELEGRAM_MSG_LENGTH:
+        await update.message.reply_text(text)
+    else:
+        for i in range(0, len(text), MAX_TELEGRAM_MSG_LENGTH):
+            await update.message.reply_text(text[i:i+MAX_TELEGRAM_MSG_LENGTH])
+
 
 async def history_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         chat_id = update.message.chat_id
